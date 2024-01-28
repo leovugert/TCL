@@ -31,7 +31,7 @@ class PlantApp:
 
         self.plant_var = tk.StringVar()
         self.plant_dropdown = ttk.Combobox(self.root, textvariable=self.plant_var)
-        self.plant_dropdown['values'] = list(self.plant_info)
+        self.plant_dropdown['values'] = []
         self.plant_dropdown.pack()
 
         # Money saved display
@@ -101,7 +101,7 @@ class PlantApp:
                     newPlant = Plant(plant_name)
                     newPlant.setSavingsGoal(goal)
                     self.plant_info.append(newPlant)
-                    self.plant_dropdown['values'] = list(self.plant_info[-1])
+                    self.plant_dropdown['values'] = list(plant.name for plant in self.plant_info)
                     self.plant_var.set(plant_name)
                     self.update_plant_display()
                     messagebox.showinfo("Success", f"{plant_name} added successfully!")
