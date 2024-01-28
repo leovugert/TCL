@@ -41,16 +41,17 @@ class PlantApp:
         self.money_entry = tk.Entry(self.root, state='readonly')
         self.money_entry.pack()
 
-        # Plant name entry
-        self.name_label = tk.Label(self.root, text="Plant Name:")
-        self.name_label.pack()
+        
+        # Entry box for saving money
+        self.save_money_label = tk.Label(self.root, text="Enter Amount to Save:")
+        self.save_money_label.pack()
 
-        self.name_entry = tk.Entry(self.root)
-        self.name_entry.pack()
+        self.save_money_entry = tk.Entry(self.root)
+        self.save_money_entry.pack()
 
         # Save money button
-        self.save_button = tk.Button(self.root, text="Save Money", command=self.save_money)
-        self.save_button.pack()
+        self.save_money_button = tk.Button(self.root, text="Save Money", command=self.save_money)
+        self.save_money_button.pack()
 
         # Plant image display
         self.plant_image = tk.PhotoImage(file="plant.png")  # Add your plant image file path
@@ -59,7 +60,7 @@ class PlantApp:
 
     def save_money(self):
         try:
-            amount = int(self.money_entry.get())
+            amount = int(self.save_money_entry.get())
             print(amount)
             print(amount)
             if amount > 0:
@@ -105,7 +106,7 @@ class PlantApp:
                     self.plant_info.append(newPlant)
                     self.plant_dropdown['values'] = list(plant.name for plant in self.plant_info)
                     self.plant_var.set(plant_name)
-                    self.current_plant = new_plant
+                    self.current_plant = newPlant
                     self.update_plant_display()
                     messagebox.showinfo("Success", f"{plant_name} added successfully!")
                 else:
