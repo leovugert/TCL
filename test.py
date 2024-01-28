@@ -1,12 +1,25 @@
 import tkinter as tk
 from tkinter import messagebox, ttk, simpledialog
 
+class Plant:
+    def __init__(self, name):
+        self.name = name
+        self.savings = 0
+        self.saveGoal = 0
+        self.growth = 0.0
+
+    def setSavingsGoal(self, goal):
+        self.saveGoal = goal
+
+    def updateGrowth(self):
+        self.growth
+
 class PlantApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Plant Savings App")
 
-        self.plant_info = {}  # Store information about each plant
+        self.plant_info = []  # Store information about each plant
 
         self.create_widgets()
         self.current_plant = None
@@ -18,7 +31,7 @@ class PlantApp:
 
         self.plant_var = tk.StringVar()
         self.plant_dropdown = ttk.Combobox(self.root, textvariable=self.plant_var)
-        self.plant_dropdown['values'] = list(self.plant_info.keys())
+        self.plant_dropdown['values'] = list(self.plant_info)
         self.plant_dropdown.pack()
 
         # Money saved display
@@ -85,8 +98,10 @@ class PlantApp:
             try:
                 goal = simpledialog.askfloat("Add Plant", "Enter Savings Goal for the Plant:")
                 if goal is not None and goal >= 0:
-                    self.plant_info[plant_name] = {'savings': 0, 'goal': goal}
-                    self.plant_dropdown['values'] = list(self.plant_info.keys())
+                    newPlant = Plant(plant_name)
+                    newPlant.setSavingsGoal(goal)
+                    self.plant_info.append(newPlant)
+                    self.plant_dropdown['values'] = list(self.plant_info[-1])
                     self.plant_var.set(plant_name)
                     self.update_plant_display()
                     messagebox.showinfo("Success", f"{plant_name} added successfully!")
