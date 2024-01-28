@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import messagebox, ttk, simpledialog
 
 class PlantApp:
     def __init__(self, root):
@@ -46,7 +46,7 @@ class PlantApp:
 
     def save_money(self):
         try:
-            amount = float(self.money_entry.get())
+            amount = int(self.money_entry.get())
             if amount > 0:
                 if self.current_plant:
                     self.plant_info[self.current_plant]['savings'] += amount
@@ -79,14 +79,23 @@ class PlantApp:
         self.update_plant_display()
 
     def add_plant(self):
-        # Add a new plant to the drop-down menu
-        plant_name = self.name_entry.get()
+        # Add a new plant to the drop-down menu using a pop-up window
+        plant_name = simpledialog.askstring("Add Plant", "Enter Plant Name:")
         if plant_name:
-            self.plant_info[plant_name] = {'savings': 0}
-            self.plant_dropdown['values'] = list(self.plant_info.keys())
-            self.plant_var.set(plant_name)
-            self.update_plant_display()
-            messagebox.showinfo("Success", f"{plant_name} added successfully!")
+            try:
+                goal = simpledialog.askfloat("Add Plant", "Enter Savings Goal for the Plant:")
+                if goal is not None and goal >= 0:
+                    self.plant_info[plant_name] = {'savings': 0, 'goal': goal}
+                    self.plant_dropdown['values'] = list(self.plant_info.keys())
+                    self.plant_var.set(plant_name)
+                    self.update_plant_display()
+                    messagebox.showinfo("Success", f"{plant_name} added successfully!")
+                else:
+                    messagebox.showwarning("Invalid Goal", "Please enter a valid non-negative savings goal.")
+            except ValueError:
+                messagebox.showerror("Invalid Input", "Please enter a valid number for the savings goal.")
+        else:
+            messagebox.showwarning("Invalid Name", "Please enter a valid plant name.")
 
 if __name__ == "__main__":
     root = tk.Tk()
