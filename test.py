@@ -1,13 +1,18 @@
 import tkinter as tk
 from tkinter import messagebox, ttk, simpledialog
 
+class Plant:
+    def __init__(self, name, goal):
+        self.name = name
+        self.goal = goal
+        self.savings = 0
+
 class PlantApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Plant Savings App")
 
-        self.plant_info = {}  # Store information about each plant
-
+        self.plants = {}  # Store instances of Plant class
         self.create_widgets()
         self.current_plant = None
 
@@ -18,7 +23,7 @@ class PlantApp:
 
         self.plant_var = tk.StringVar()
         self.plant_dropdown = ttk.Combobox(self.root, textvariable=self.plant_var)
-        self.plant_dropdown['values'] = list(self.plant_info.keys())
+        self.plant_dropdown['values'] = list(self.plants.keys())
         self.plant_dropdown.pack()
 
         # Money saved display
@@ -47,11 +52,13 @@ class PlantApp:
     def save_money(self):
         try:
             amount = int(self.money_entry.get())
+            print(amount)
+            print(amount)
             if amount > 0:
                 if self.current_plant:
-                    self.plant_info[self.current_plant]['savings'] += amount
+                    self.current_plant.savings += amount
                     self.update_plant_display()
-                    messagebox.showinfo("Success", f"${amount} saved successfully for {self.current_plant}!")
+                    messagebox.showinfo("Success", f"${amount} saved successfully for {self.current_plant.name}!")
                 else:
                     messagebox.showwarning("No Plant Selected", "Please select a plant from the drop-down menu.")
             else:
@@ -62,10 +69,10 @@ class PlantApp:
     def update_plant_display(self):
         # Update money saved display
         if self.current_plant:
-            savings = self.plant_info[self.current_plant]['savings']
+            savings = self.current_plant.savings
             self.money_entry.config(state='normal')
             self.money_entry.delete(0, tk.END)
-            self.money_entry.insert(0, f"${savings}")
+            self.money_entry.insert(0, savings)
             self.money_entry.config(state='readonly')
 
             # Update plant image (you can customize this part based on your plant growth logic)
@@ -75,7 +82,7 @@ class PlantApp:
 
     def plant_selected(self, event):
         # Callback when a plant is selected from the drop-down menu
-        self.current_plant = self.plant_var.get()
+        self.current_plant = self.plants.get(self.plant_var.get())
         self.update_plant_display()
 
     def add_plant(self):
@@ -85,9 +92,11 @@ class PlantApp:
             try:
                 goal = simpledialog.askfloat("Add Plant", "Enter Savings Goal for the Plant:")
                 if goal is not None and goal >= 0:
-                    self.plant_info[plant_name] = {'savings': 0, 'goal': goal}
-                    self.plant_dropdown['values'] = list(self.plant_info.keys())
+                    new_plant = Plant(name=plant_name, goal=goal)
+                    self.plants[plant_name] = new_plant
+                    self.plant_dropdown['values'] = list(self.plants.keys())
                     self.plant_var.set(plant_name)
+                    self.current_plant = new_plant
                     self.update_plant_display()
                     messagebox.showinfo("Success", f"{plant_name} added successfully!")
                 else:
